@@ -28,10 +28,11 @@ class RunSynchronousProcess
         }
 
         $completedProcess = $this->processRunner->runBlockingProcess($process);
+
         return [
-            'status' => $completedProcess->getStatus(),
             'stdout' => $completedProcess->getOutput(),
-            'stderr' => $completedProcess->getErrorOutput()
+            'stderr' => $completedProcess->getErrorOutput(),
+            'status' => $completedProcess->getExitCode(),
         ];
     }
 }

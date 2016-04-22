@@ -18,7 +18,7 @@ class RunSynchronousProcessTest extends \PHPUnit_Framework_TestCase
             ->getMock();
         $completedProcess->method('getOutput')->willReturn(".\n..");
         $completedProcess->method('getErrorOutput')->willReturn('');
-        $completedProcess->method('getStatus')->willReturn(0);
+        $completedProcess->method('getExitCode')->willReturn(0);
 
         $processRunner
             ->expects($this->once())
@@ -36,7 +36,7 @@ class RunSynchronousProcessTest extends \PHPUnit_Framework_TestCase
         $sut = new RunSynchronousProcess($processRunner);
         $result = $sut->__invoke("ls -a1");
 
-        $this->assertEquals(['stdout' => ".\n..", 'stderr' => '', 'status' => 0], $result);
+        $this->assertSame(['stdout' => ".\n..", 'stderr' => '', 'status' => 0], $result);
     }
 
 }
