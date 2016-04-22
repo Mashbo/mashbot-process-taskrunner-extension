@@ -6,9 +6,8 @@ use Symfony\Component\Process\Process;
 
 class SymfonyProcessRunner implements BlockingProcessRunner
 {
-
     public function runBlockingProcess(Process $process)
     {
-        $process->mustRun();
+        return $process->mustRun();
     }
 }
