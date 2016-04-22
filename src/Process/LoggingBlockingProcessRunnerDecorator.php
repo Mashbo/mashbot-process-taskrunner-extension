@@ -25,6 +25,6 @@ class LoggingBlockingProcessRunnerDecorator implements BlockingProcessRunner
     public function runBlockingProcess(Process $process)
     {
         $this->logger->debug(sprintf('Running command %s from directory %s', $process->getCommandLine(), $process->getWorkingDirectory()));
-        $this->processRunner->runBlockingProcess($process);
+        return $this->processRunner->runBlockingProcess($process);
     }
 }
