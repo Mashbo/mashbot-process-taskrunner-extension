@@ -2,8 +2,8 @@
 
 namespace Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Process;
 
+use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Command\Command;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Process\Process;
 
 class LoggingBlockingProcessRunnerDecorator implements BlockingProcessRunner
 {
@@ -22,9 +22,9 @@ class LoggingBlockingProcessRunnerDecorator implements BlockingProcessRunner
         $this->logger = $logger;
     }
 
-    public function runBlockingProcess(Process $process)
+    public function runBlockingProcess(Command $command, $workingDirectory, $timeout = null)
     {
-        $this->logger->debug(sprintf('Running command %s from directory %s', $process->getCommandLine(), $process->getWorkingDirectory()));
-        return $this->processRunner->runBlockingProcess($process);
+        $this->logger->debug(sprintf('Running command %s from directory %s', $command->getCommandLine(), $workingDirectory));
+        return $this->processRunner->runBlockingProcess($command, $workingDirectory);
     }
 }

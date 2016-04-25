@@ -2,8 +2,9 @@
 
 namespace Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Tasks;
 
+use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Command\Command;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Process\BlockingProcessRunner;
-use Symfony\Component\Process\Process;
+use Mashbo\Mashbot\TaskRunner\TaskContext;
 
 class RunSynchronousProcess
 {
@@ -17,22 +18,21 @@ class RunSynchronousProcess
         $this->processRunner = $processRunner;
     }
 
-    public function __invoke($command, $directory = null, $timeout = null) {
-
-        $process = new Process($command, $directory);
-        if (!is_null($timeout)) {
-            $process->setTimeout($timeout);
+    public function __invoke(TaskContext $context, $command, $directory, $timeout = null)
+    {
+        if (is_string($command)) {
+            $command = $context->taskRunner()->invoke('process:command:build', ['command' => $command]);
         }
-        if (0 === $timeout) {
-            $process->setTimeout(null);
+        if (!($command instanceof Command)) {
+            throw new \LogicException("Command argument must be either a string or " . Command::class . " object");
         }
 
-        $completedProcess = $this->processRunner->runBlockingProcess($process);
+        $commandResult = $this->processRunner->runBlockingProcess($command, $directory, $timeout);
 
         return [
-            'stdout' => $completedProcess->getOutput(),
-            'stderr' => $completedProcess->getErrorOutput(),
-            'status' => $completedProcess->getExitCode(),
+            'stdout' => $commandResult->getStdOut(),
+            'stderr' => $commandResult->getStdErr(),
+            'status' => $commandResult->getExitCode(),
         ];
     }
 }

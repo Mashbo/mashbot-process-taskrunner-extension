@@ -2,11 +2,12 @@
 
 namespace Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Tests\Process;
 
+use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Command\Command;
+use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Command\CommandResult;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Process\BlockingProcessRunner;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Process\LoggingBlockingProcessRunnerDecorator;
 use Prophecy\Argument;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Process\Process;
 
 class LoggingBlockingProcessRunnerDecoratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,18 +15,15 @@ class LoggingBlockingProcessRunnerDecoratorTest extends \PHPUnit_Framework_TestC
     {
         $runner     = $this->prophesize(BlockingProcessRunner::class);
         $logger     = $this->prophesize(LoggerInterface::class);
-        $process    = $this->prophesize(Process::class);
+        $command    = new Command("ls");
 
-        $runner->runBlockingProcess($process)->shouldBeCalled()->willReturn($process);
-
-        $process->getCommandLine()->willReturn("ls");
-        $process->getWorkingDirectory()->willReturn("/tmp");
+        $runner->runBlockingProcess($command, "/tmp")->shouldBeCalled()->willReturn(new CommandResult(0, '', ''));
 
         $sut = new LoggingBlockingProcessRunnerDecorator($runner->reveal(), $logger->reveal());
-        $result = $sut->runBlockingProcess($process->reveal());
+        $result = $sut->runBlockingProcess($command, "/tmp", null);
         
         $logger->debug("Running command ls from directory /tmp")->shouldHaveBeenCalled();
 
-        $this->assertSame($process->reveal(), $result);
+        $this->assertEquals(new CommandResult(0, '', ''), $result);
     }
 }
