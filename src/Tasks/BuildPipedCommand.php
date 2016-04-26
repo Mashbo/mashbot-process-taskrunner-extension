@@ -6,8 +6,21 @@ use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Command\Command;
 
 class BuildPipedCommand
 {
-    public function __invoke(Command $from, Command $to)
+    /**
+     * @param Command|string $from
+     * @param Command|string $to
+     * @return Command
+     */
+    public function __invoke($from, $to)
     {
+        if (is_string($from)) {
+            $from = new Command($from);
+        }
+
+        if (is_string($to)) {
+            $to = new Command($to);
+        }
+
         return new Command($from->getCommandLine() . " | " . $to->getCommandLine());
     }
 }

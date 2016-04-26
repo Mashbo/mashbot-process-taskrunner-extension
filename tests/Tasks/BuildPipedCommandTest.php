@@ -12,4 +12,10 @@ class BuildPipedCommandTest extends \PHPUnit_Framework_TestCase
         $sut = new BuildPipedCommand;
         $this->assertEquals(new Command("ls -la | grep file"), $sut->__invoke(new Command('ls -la'), new Command('grep file')));
     }
+
+    public function test_commands_can_be_passed_as_strings()
+    {
+        $sut = new BuildPipedCommand();
+        $this->assertEquals(new Command("ls -la | grep file"), $sut->__invoke('ls -la', 'grep file'));
+    }
 }
