@@ -5,6 +5,7 @@ namespace Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Tests;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Process\BlockingProcessRunner;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\ProcessTaskRunnerExtension;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Tasks\BuildCommand;
+use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Tasks\BuildPipedCommand;
 use Mashbo\Mashbot\Extensions\ProcessTaskRunnerExtension\Tasks\RunSynchronousProcess;
 use Mashbo\Mashbot\TaskRunner\TaskRunner;
 
@@ -33,6 +34,13 @@ class ProcessTaskRunnerExtensionTest extends \PHPUnit_Framework_TestCase
             ->method('add')
             ->with('process:command:build', $this->callback(function($arg) {
                 return $arg instanceof BuildCommand;
+            }));
+
+        $taskRunner
+            ->expects($this->at(2))
+            ->method('add')
+            ->with('process:pipe', $this->callback(function($arg) {
+                return $arg instanceof BuildPipedCommand;
             }));
 
         $sut = new ProcessTaskRunnerExtension($processRunner);
