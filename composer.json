@@ -3,7 +3,7 @@
     "description": "Provide tasks to run commands and processes locally",
     "require": {
         "mashbo/mashbot-taskrunner": "*@dev",
-        "symfony/process": "~3.0"
+        "symfony/process": "~2.8|~3.0"
     },
     "suggest": {
         "psr/log": "Add extra logging information"
