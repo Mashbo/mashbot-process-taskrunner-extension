@@ -17,12 +17,12 @@ class LoggingBlockingProcessRunnerDecoratorTest extends \PHPUnit_Framework_TestC
         $logger     = $this->prophesize(LoggerInterface::class);
         $command    = new Command("ls");
 
-        $runner->runBlockingProcess($command, "/tmp")->shouldBeCalled()->willReturn(new CommandResult(0, '', ''));
+        $runner->runBlockingProcess($command, "/tmp", null, null)->shouldBeCalled()->willReturn(new CommandResult(0, '', ''));
 
         $sut = new LoggingBlockingProcessRunnerDecorator($runner->reveal(), $logger->reveal());
-        $result = $sut->runBlockingProcess($command, "/tmp", null);
+        $result = $sut->runBlockingProcess($command, "/tmp", null, null);
         
-        $logger->debug("Running command ls from directory /tmp")->shouldHaveBeenCalled();
+        $logger->info("Running command ls from directory /tmp")->shouldHaveBeenCalled();
 
         $this->assertEquals(new CommandResult(0, '', ''), $result);
     }
