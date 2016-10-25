@@ -11,6 +11,7 @@ class LoggingBlockingProcessRunnerDecorator implements BlockingProcessRunner
      * @var BlockingProcessRunner
      */
     private $processRunner;
+
     /**
      * @var LoggerInterface
      */
@@ -22,9 +23,9 @@ class LoggingBlockingProcessRunnerDecorator implements BlockingProcessRunner
         $this->logger = $logger;
     }
 
-    public function runBlockingProcess(Command $command, $workingDirectory, $timeout = null)
+    public function runBlockingProcess(Command $command, $workingDirectory, $timeout = null, $outputCallback = null)
     {
-        $this->logger->debug(sprintf('Running command %s from directory %s', $command->getCommandLine(), $workingDirectory));
-        return $this->processRunner->runBlockingProcess($command, $workingDirectory);
+        $this->logger->info(sprintf('Running command %s from directory %s', $command->getCommandLine(), $workingDirectory));
+        return $this->processRunner->runBlockingProcess($command, $workingDirectory, $timeout, $outputCallback);
     }
 }

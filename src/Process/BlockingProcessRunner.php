@@ -14,5 +14,5 @@ interface BlockingProcessRunner
      * 
      * @return CommandResult
      */
-    public function runBlockingProcess(Command $command, $workingDirectory, $timeout = null);
+    public function runBlockingProcess(Command $command, $workingDirectory, $timeout = null, $outputCallback = null);
 }
